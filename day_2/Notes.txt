@@ -1,0 +1,66 @@
+Date: 09/01/2026
+We will make sure, we write a near and clean code, which will be very easy to maintain, make changes and understand
+
+ctrl + K + c to comment
+ctrl + K + u to uncomment
+
+string - with small s is a keyword/datatype
+String - with capital S is a class
+
+Interview Question:
+When to use a class and structure?
+What are the difference between class and structure?
+Why string is not struct but only class?
+
+Types of data type:
+1. Primitive datatype: int, double, bool, char -> provided by c# languages
+2. (UDT) Non-primitive data types: string, object, array -> provided by .Net framerwork
+3. Use-defined datatype - classes, interfaces, delegates
+
+
+4. Component of .Net
+5. compilation process
+    Command Language Runtime (CLR) made up of 9 component, for Java it is JVM -> Java Virtual Machine
+    CTS -> Common Type System and CLS-> Command Lnguage System
+        .Net support 54+ Language C#, J#, F#, C++...
+        CTS means all the languages should have this type commonly available
+
+        CLS -> every languages has its own syntax
+            For example: 
+                C# have int age = 10, VB dim age as Integer, TypeScript number age = 10,
+                
+                what .Net does when the built happens the language compiler will convert into common language
+                which is understood my Common Language RUNTIME
+                so C# int,  VB Integer, Typescript number, get compilted to int32
+
+                compiler convert it into CLS
+    CLI Common Language interface
+        Notepad, Vistual Studio, VS code these days (use the tools which supports debugging)
+
+    For C# it has C Sharp Compiler, For TypeScript it has TypeScript Compiler, so on
+
+    Developing the application:
+    we code on vscode, when we build it goes to the compiler, MSIL Code (Microsoft Intermediate Language Code) 
+    this is not a machine code which makes it cross platform, java calls it a byte code,
+    dll(dynamic link library) and .exe file is created instead bin along with other
+    which is collectly called as an Assembly
+
+    Running the Application:
+        app-> run -> 
+        since the OS does not know MSIL, it has to go through CLR, where MSIL get converted into binary code, and 
+        binary code will run into RAM/0S, so CLR will convert the binary code for all, it can be different for 
+        different operating system, so this is called Just In Time Compilation 6. JIT
+7. 
+
+Libraries:
+System.IO 
+
+FileStream                      networkStream               memorystream
+
+FileStream myFile = new FileStream("filename", fileaccess., filemode.);
+StreamReader (When you want to read from file)
+StreamWriter (When you wnat to write into file)
+
+So the file create will by default it will go to the bin folder
+
+

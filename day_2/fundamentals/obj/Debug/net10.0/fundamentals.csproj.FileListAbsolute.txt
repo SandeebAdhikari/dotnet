@@ -1,0 +1,14 @@
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.AssemblyInfoInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.AssemblyInfo.cs
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.csproj.CoreCompileInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/bin/Debug/net10.0/fundamentals
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/bin/Debug/net10.0/fundamentals.deps.json
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/bin/Debug/net10.0/fundamentals.runtimeconfig.json
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/bin/Debug/net10.0/fundamentals.dll
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/bin/Debug/net10.0/fundamentals.pdb
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.dll
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/refint/fundamentals.dll
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.pdb
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/fundamentals.genruntimeconfig.cache
+/Users/sandeebadhikari/Documents/revature/day_2/fundamentals/obj/Debug/net10.0/ref/fundamentals.dll

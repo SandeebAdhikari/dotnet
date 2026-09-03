@@ -1,0 +1,14 @@
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/bin/Debug/net10.0/employee_management
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/bin/Debug/net10.0/employee_management.deps.json
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/bin/Debug/net10.0/employee_management.runtimeconfig.json
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/bin/Debug/net10.0/employee_management.dll
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/bin/Debug/net10.0/employee_management.pdb
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.AssemblyInfoInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.AssemblyInfo.cs
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.csproj.CoreCompileInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.dll
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/refint/employee_management.dll
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.pdb
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/employee_management.genruntimeconfig.cache
+/Users/sandeebadhikari/Documents/revature/day_2/employee_management/obj/Debug/net10.0/ref/employee_management.dll

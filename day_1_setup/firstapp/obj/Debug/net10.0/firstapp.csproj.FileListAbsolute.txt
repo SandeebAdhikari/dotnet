@@ -1,0 +1,14 @@
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/bin/Debug/net10.0/firstapp
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/bin/Debug/net10.0/firstapp.deps.json
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/bin/Debug/net10.0/firstapp.runtimeconfig.json
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/bin/Debug/net10.0/firstapp.dll
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/bin/Debug/net10.0/firstapp.pdb
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.AssemblyInfoInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.AssemblyInfo.cs
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.csproj.CoreCompileInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.dll
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/refint/firstapp.dll
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.pdb
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/firstapp.genruntimeconfig.cache
+/Users/sandeebadhikari/Documents/revature/day_1_setup/firstapp/obj/Debug/net10.0/ref/firstapp.dll
