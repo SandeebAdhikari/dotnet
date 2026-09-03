@@ -6,7 +6,7 @@ namespace Banking
         {
             if(amount < 5000)
             {
-                throw new Exception("Sorry you cannot withdraw less that 5000.")
+                throw new Exception("Sorry you cannot withdraw less that 5000.");
             }
             else
             {

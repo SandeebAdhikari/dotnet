@@ -1,0 +1,14 @@
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.AssemblyInfoInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.AssemblyInfo.cs
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.csproj.CoreCompileInputs.cache
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/bin/Debug/net10.0/banking_app
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/bin/Debug/net10.0/banking_app.deps.json
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/bin/Debug/net10.0/banking_app.runtimeconfig.json
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/bin/Debug/net10.0/banking_app.dll
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/bin/Debug/net10.0/banking_app.pdb
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.dll
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/refint/banking_app.dll
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.pdb
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/banking_app.genruntimeconfig.cache
+/Users/sandeebadhikari/Documents/revature/day_4/banking_app/obj/Debug/net10.0/ref/banking_app.dll
