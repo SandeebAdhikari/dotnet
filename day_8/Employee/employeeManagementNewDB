@@ -1,0 +1,49 @@
+CREATE DATABASE employeeManagementNewDB;
+GO
+
+USE employeeManagementNewDB;
+GO
+
+CREATE TABLE depts
+(
+    deptNo INT PRIMARY KEY,
+    deptName VARCHAR(20),
+    deptLocation VARCHAR(20)
+);
+
+INSERT INTO depts VALUES (10, 'HR', 'Texas');
+INSERT INTO depts VALUES (20, 'Accounts', 'New York');
+INSERT INTO depts VALUES (30, 'Training', 'San Francisco');
+INSERT INTO depts VALUES (40, 'IT', 'Vegas');
+
+
+CREATE TABLE employees
+(
+    empNo INT PRIMARY KEY,
+    empName VARCHAR(30),
+    empDesignation VARCHAR(20),
+    empSalary INT,
+    empIsPermenant BIT,
+    empDept INT,
+
+    CONSTRAINT fk_empDept
+        FOREIGN KEY (empDept)
+        REFERENCES depts(deptNo)
+);
+
+INSERT INTO employees VALUES (1, 'Peter', 'Developer', 3000, 1, 40);
+INSERT INTO employees VALUES (2, 'Mary', 'Trainer', 4000, 1, 30);
+INSERT INTO employees VALUES (3, 'Raj', 'Accountant', 5000, 1, 20);
+INSERT INTO employees VALUES (4, 'Monica', 'Sr.Accountant', 8000, 1, 20);
+INSERT INTO employees VALUES (5, 'Penny', 'Sr.Hr', 3100, 0, 10);
+INSERT INTO employees VALUES (6, 'Leonard', 'Developer', 12000, 1, 40);
+INSERT INTO employees VALUES (7, 'Sheldon', 'Developer', 13000, 1, 40);
+INSERT INTO employees VALUES (8, 'Mike', 'Hr Manager', 4000, 1, 10);
+INSERT INTO employees VALUES (9, 'Tyson', 'Developer', 8000, 0, 10);
+INSERT INTO employees VALUES (10, 'Murray', 'Sr.Trainer', 9000, 1, 30);
+INSERT INTO employees VALUES (11, 'Peter', 'Developer', 13000, 0, 40);
+INSERT INTO employees VALUES (12, 'Julie', 'HR Associate', 5000, 1, 10);
+
+
+SELECT * FROM depts;
+SELECT * FROM employees;
