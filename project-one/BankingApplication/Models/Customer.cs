@@ -9,7 +9,7 @@ namespace BankingApp.Models
         private string _phoneNumber = "";
         private string _email = "";
         private string _socialSecurityNumber = "";
-
+        public int UserId { get; private set; }
         public int CustomerId { get; private set; }
 
         public DateTime DateOfBirth { get; private set; }
@@ -133,7 +133,13 @@ namespace BankingApp.Models
             }
         }
 
+        private Customer()
+        {
+            Address = null!;
+        }
+
         public Customer(
+            int userId,
             string firstName,
             string lastName,
             DateTime dateOfBirth,
@@ -142,12 +148,22 @@ namespace BankingApp.Models
             string email,
             string ssn)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            DateOfBirth = dateOfBirth;
-            Address = address;
-            PhoneNumber = phoneNumber;
-            Email = email;
+            if (userId <= 0)
+            {
+                throw new ArgumentException(
+                    "User ID must be valid.");
+            }
+
+            this.UserId = userId;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.DateOfBirth = dateOfBirth;
+
+            this.Address = address ??
+                throw new ArgumentNullException(nameof(address));
+
+            this.PhoneNumber = phoneNumber;
+            this.Email = email;
 
             SetSocialSecurityNumber(ssn);
         }
