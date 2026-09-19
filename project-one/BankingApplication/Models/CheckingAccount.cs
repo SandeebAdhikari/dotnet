@@ -19,7 +19,7 @@ namespace BankingApp.Models
                 return this.Balance + this.OverdraftLimit;
             }
         }
-
+        private CheckingAccount() {}
         public CheckingAccount(
             int customerId,
             string accountNumber,

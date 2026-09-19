@@ -13,7 +13,7 @@ namespace BankingApp.Models
         public decimal AnnualInterestRate { get; private set; }
 
         public decimal MinimumBalance { get; private set; }
-
+        private SavingsAccount()(}
         public SavingsAccount(
             int customerId,
             string accountNumber,

@@ -2,8 +2,8 @@ namespace BankingApp.Models
 {
     public class AddressChangeRequest : ServiceRequest
     {
-        public Address NewAddress { get; private set; }
-
+        public Address NewAddress { get; private set; } = null!;
+        private AddressChangeRequest(){}
         public AddressChangeRequest(
             int customerId,
             Address newAddress)

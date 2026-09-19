@@ -9,7 +9,7 @@ namespace BankingApp.Models
         public DateTime RequestedDate { get; private set; }
 
         public RequestStatus Status { get; protected set; }
-
+        protected ServiceRequest(){}
         protected ServiceRequest(int customerId)
         {
             if (customerId <= 0)

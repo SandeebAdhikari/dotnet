@@ -19,7 +19,7 @@ namespace BankingApp.Models
         public AccountStatus Status { get; private set; }
 
         public DateTime OpenedDate { get; private set; }
-
+        protected Account(){}
         protected Account(
             int customerId,
             string accountNumber,

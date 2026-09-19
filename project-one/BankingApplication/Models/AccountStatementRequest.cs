@@ -7,7 +7,7 @@ namespace BankingApp.Models
         public DateTime StartDate { get; private set; }
 
         public DateTime EndDate { get; private set; }
-
+        private AccountStatementRequest(){}
         public AccountStatementRequest(
             int customerId,
             int accountId,

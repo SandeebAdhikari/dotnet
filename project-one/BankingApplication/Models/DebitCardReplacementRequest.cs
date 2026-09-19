@@ -5,7 +5,7 @@ namespace BankingApp.Models
         public int AccountId { get; private set; }
 
         public DebitCardReplacementReason Reason { get; private set; }
-
+        private DebitCardReplacementRequest(){}
         public DebitCardReplacementRequest(
             int customerId,
             int accountId,

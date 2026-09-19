@@ -15,7 +15,7 @@ namespace BankingApp.Models
         public DateTime TransactionDate { get; private set; }
 
         public decimal BalanceAfterTransaction { get; private set; }
-
+        private Transaction(){}
         public Transaction(
             int accountId,
             decimal amount,

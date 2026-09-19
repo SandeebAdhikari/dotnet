@@ -3,7 +3,7 @@ namespace BankingApp.Models
     public class CheckbookRequest : ServiceRequest
     {
         public int AccountId { get; private set; }
-
+        private CheckbookRequest(){}
         public CheckbookRequest(
             int customerId,
             int accountId)

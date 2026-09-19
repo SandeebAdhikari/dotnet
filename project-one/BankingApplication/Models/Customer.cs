@@ -8,7 +8,7 @@ namespace BankingApp.Models
         private string _lastName = "";
         private string _phoneNumber = "";
         private string _email = "";
-        private string _socialSecurityNumber = "";
+        private string _socialSecurityNumberLastFour = "";
         public int UserId { get; private set; }
         public int CustomerId { get; private set; }
 
@@ -123,16 +123,15 @@ namespace BankingApp.Models
         {
             get
             {
-                if (_socialSecurityNumber.Length != 9)
+                if (_socialSecurityNumberLastFour.Length != 4)
                 {
                     return "***-**-****";
                 }
 
                 return "***-**-" +
-                       _socialSecurityNumber[^4..];
+                    _socialSecurityNumberLastFour;
             }
         }
-
         private Customer()
         {
             Address = null!;
@@ -186,7 +185,7 @@ namespace BankingApp.Models
                     "SSN must contain 9 digits.");
             }
 
-            _socialSecurityNumber = cleanedSsn;
+            _socialSecurityNumberLastFour = cleanedSsn[^4..];
         }
     }
 }
