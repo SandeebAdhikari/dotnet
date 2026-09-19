@@ -55,5 +55,16 @@ namespace BankingApp.Models
 
             this.Status = RequestStatus.Cancelled;
         }
+
+        public void MarkCompleted()
+        {
+            if (this.Status != RequestStatus.Approved)
+            {
+                throw new InvalidOperationException(
+                    "Only approved requests can be completed.");
+            }
+
+            this.Status = RequestStatus.Completed;
+        }
     }
 }

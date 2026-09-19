@@ -18,16 +18,5 @@ namespace BankingApp.Models
 
             this.NewAddress = newAddress;
         }
-
-        public void MarkCompleted()
-        {
-            if (this.Status != RequestStatus.Approved)
-            {
-                throw new InvalidOperationException(
-                    "Address change request must be approved before completion.");
-            }
-
-            this.Status = RequestStatus.Completed;
-        }
     }
 }
