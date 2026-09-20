@@ -1,7 +1,42 @@
-namespace BankingApp.Interfaces
+using BankingApp.Data;
+using BankingApp.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace BankingApp.Repositories
 {
-    public interface IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        Task<int> SaveChangesAsync();
+        private readonly BankingDbContext _context;
+
+        public UnitOfWork(BankingDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task ExecuteInTransactionAsync(Func<Task> action)
+        {
+            await using var transaction =
+                await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                await action();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+
+                _context.ChangeTracker.Clear();
+
+                throw;
+            }
+        }
     }
 }
