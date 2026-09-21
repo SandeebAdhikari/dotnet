@@ -9,7 +9,12 @@ namespace BankingApp.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly AccountNumberGenerator
+            _accountNumberGenerator;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IDataAnnotationsValidator
+            _dataAnnotationsValidator;
         private readonly IUnitOfWork _unitOfWork;
 
         public RegistrationService(
@@ -17,18 +22,25 @@ namespace BankingApp.Services
             ICustomerRepository customerRepository,
             IRoleRepository roleRepository,
             IUserRoleRepository userRoleRepository,
+            IAccountRepository accountRepository,
+            AccountNumberGenerator accountNumberGenerator,
             IPasswordHasher passwordHasher,
+            IDataAnnotationsValidator dataAnnotationsValidator,
             IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _customerRepository = customerRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _accountRepository = accountRepository;
+            _accountNumberGenerator = accountNumberGenerator;
             _passwordHasher = passwordHasher;
+            _dataAnnotationsValidator =
+                dataAnnotationsValidator;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task RegisterCustomerAsync(
+        public async Task<Account> RegisterCustomerAsync(
             string username,
             string password,
             string firstName,
@@ -37,7 +49,9 @@ namespace BankingApp.Services
             Address address,
             string phoneNumber,
             string email,
-            string ssn)
+            string ssn,
+            AccountType accountType,
+            decimal openingBalance)
         {
             bool usernameExists =
                 await _userRepository
@@ -65,6 +79,15 @@ namespace BankingApp.Services
                     user,
                     password);
 
+            _dataAnnotationsValidator.Validate(user);
+            _dataAnnotationsValidator.Validate(address);
+
+            AccountOpeningPolicy.ValidateOpeningBalance(
+                accountType,
+                openingBalance);
+
+            Account? openedAccount = null;
+
             await _unitOfWork.ExecuteInTransactionAsync(
                 async () =>
                 {
@@ -83,6 +106,8 @@ namespace BankingApp.Services
                         email,
                         ssn);
 
+                    _dataAnnotationsValidator.Validate(customer);
+
                     var userRole = new UserRole(
                         user.UserId,
                         customerRole.RoleId);
@@ -94,7 +119,43 @@ namespace BankingApp.Services
                         .AddAsync(userRole);
 
                     await _unitOfWork.SaveChangesAsync();
+
+                    string accountNumber =
+                        await _accountNumberGenerator.GenerateAsync();
+
+                    openedAccount = accountType switch
+                    {
+                        AccountType.Checking =>
+                            new CheckingAccount(
+                                customer.CustomerId,
+                                accountNumber,
+                                openingBalance,
+                                AccountOpeningPolicy
+                                    .CheckingOverdraftLimit),
+
+                        AccountType.Savings =>
+                            new SavingsAccount(
+                                customer.CustomerId,
+                                accountNumber,
+                                openingBalance,
+                                AccountOpeningPolicy
+                                    .SavingsAnnualInterestRate,
+                                AccountOpeningPolicy
+                                    .SavingsMinimumOpeningBalance),
+
+                        _ => throw new ArgumentOutOfRangeException(
+                            nameof(accountType))
+                    };
+
+                    await _accountRepository
+                        .AddAsync(openedAccount);
+
+                    await _unitOfWork.SaveChangesAsync();
                 });
+
+            return openedAccount
+                ?? throw new InvalidOperationException(
+                    "The account could not be created.");
         }
     }
 }

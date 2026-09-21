@@ -17,15 +17,21 @@ namespace BankingApp.Services
             User user,
             string password)
         {
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new ArgumentException(
-                    "Password cannot be empty.");
-            }
+            ValidatePassword(password);
 
             return _hasher.HashPassword(
                 user,
                 password);
+        }
+
+        public void ValidatePassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) ||
+                password.Length < 8)
+            {
+                throw new ArgumentException(
+                    "Password must be at least 8 characters.");
+            }
         }
 
         public bool Verify(

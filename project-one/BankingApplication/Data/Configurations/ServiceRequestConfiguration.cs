@@ -26,6 +26,8 @@ namespace BankingApp.Data.Configurations
                     "DebitCardReplacement")
                 .HasValue<AccountStatementRequest>(
                     "AccountStatement")
+                .HasValue<AccountClosureRequest>(
+                    "AccountClosure")
                 .HasValue<AddressChangeRequest>("AddressChange");
 
             builder.Property<string>("RequestKind")

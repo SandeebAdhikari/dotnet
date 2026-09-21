@@ -15,6 +15,12 @@ namespace BankingApp.Interfaces
         Task<bool> AccountNumberExistsAsync(
             string accountNumber);
 
+        Task<int> CountAsync();
+
+        Task<int> CountByStatusAsync(AccountStatus status);
+
+        Task<decimal> GetTotalBalanceAsync();
+
         Task AddAsync(Account account);
     }
 }

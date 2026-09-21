@@ -57,5 +57,16 @@ namespace BankingApp.Models
 
             this.Balance -= amount;
         }
+
+        public void UpdateOverdraftLimit(decimal overdraftLimit)
+        {
+            if (overdraftLimit < 0)
+            {
+                throw new ArgumentException(
+                    "Overdraft limit cannot be negative.");
+            }
+
+            this.OverdraftLimit = overdraftLimit;
+        }
     }
 }

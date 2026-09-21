@@ -90,5 +90,32 @@ namespace BankingApp.Models
                 this.Balance += interest;
             }
         }
+
+        public void UpdateTerms(
+            decimal annualInterestRate,
+            decimal minimumBalance)
+        {
+            if (annualInterestRate < 0 ||
+                annualInterestRate > 1)
+            {
+                throw new ArgumentException(
+                    "Annual interest rate must be between 0 and 1.");
+            }
+
+            if (minimumBalance < 0)
+            {
+                throw new ArgumentException(
+                    "Minimum balance cannot be negative.");
+            }
+
+            if (this.Balance < minimumBalance)
+            {
+                throw new InvalidOperationException(
+                    "Current balance does not meet the new minimum balance requirement.");
+            }
+
+            this.AnnualInterestRate = annualInterestRate;
+            this.MinimumBalance = minimumBalance;
+        }
     }
 }

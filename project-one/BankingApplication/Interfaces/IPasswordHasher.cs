@@ -4,6 +4,8 @@ namespace BankingApp.Interfaces
 {
     public interface IPasswordHasher
     {
+        void ValidatePassword(string password);
+
         string Hash(
             User user,
             string password);

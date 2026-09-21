@@ -43,6 +43,26 @@ namespace BankingApp.Repositories
                 .AnyAsync(a => a.AccountNumber == accountNumber);
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await _context.Accounts.CountAsync();
+        }
+
+        public async Task<int> CountByStatusAsync(
+            AccountStatus status)
+        {
+            return await _context.Accounts
+                .Where(a => a.Status == status)
+                .CountAsync();
+        }
+
+        public async Task<decimal> GetTotalBalanceAsync()
+        {
+            return await _context.Accounts
+                .Select(a => (decimal?)a.Balance)
+                .SumAsync() ?? 0m;
+        }
+
         public async Task AddAsync(Account account)
         {
             await _context.Accounts.AddAsync(account);
