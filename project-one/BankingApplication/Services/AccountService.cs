@@ -26,7 +26,7 @@ namespace BankingApp.Services
                 .GetByCustomerIdAsync(customerId);
         }
 
-        public async Task DepositAsync(
+        public async Task<Account> DepositAsync(
             int customerId,
             string accountNumber,
             decimal amount)
@@ -48,9 +48,11 @@ namespace BankingApp.Services
                 .AddAsync(transaction);
 
             await _unitOfWork.SaveChangesAsync();
+
+            return account;
         }
 
-        public async Task WithdrawAsync(
+        public async Task<Account> WithdrawAsync(
             int customerId,
             string accountNumber,
             decimal amount)
@@ -72,6 +74,8 @@ namespace BankingApp.Services
                 .AddAsync(transaction);
 
             await _unitOfWork.SaveChangesAsync();
+
+            return account;
         }
 
         private async Task<Account> GetOwnedAccountAsync(

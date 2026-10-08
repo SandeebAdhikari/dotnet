@@ -1,3 +1,4 @@
+using BankingApp.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -8,15 +9,8 @@ namespace BankingApp.Data
     {
         public BankingDbContext CreateDbContext(string[] args)
         {
-            var connectionString =
-                Environment.GetEnvironmentVariable(
-                    "BANKING_DB_CONNECTION");
-
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                throw new InvalidOperationException(
-                    "BANKING_DB_CONNECTION environment variable is not set.");
-            }
+            string connectionString =
+                BankingConfiguration.LoadConnectionString();
 
             var optionsBuilder =
                 new DbContextOptionsBuilder<BankingDbContext>();

@@ -47,7 +47,7 @@ namespace BankingApp.Services
                             .GetByAccountNumberAsync(
                                 toAccountNumber)
                         ?? throw new InvalidOperationException(
-                            "Destination account was not found.");
+                            "Recipient account does not exist. Transfer was not processed.");
 
                     if (fromAccount.AccountId ==
                         toAccount.AccountId)

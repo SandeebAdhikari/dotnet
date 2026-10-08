@@ -1,3 +1,4 @@
+using BankingApp.Configuration;
 using BankingApp.Data;
 using BankingApp.Interfaces;
 using BankingApp.Models;
@@ -15,17 +16,17 @@ namespace BankingApp
         {
             try
             {
-                string connectionString =
-                    Environment.GetEnvironmentVariable(
-                        "BANKING_DB_CONNECTION")
-                    ?? throw new InvalidOperationException(
-                        "BANKING_DB_CONNECTION environment variable is not set.");
+                BankingConfiguration configuration =
+                    BankingConfiguration.Load();
 
                 using ServiceProvider serviceProvider =
-                    ConfigureServices(connectionString);
+                    ConfigureServices(
+                        configuration.ConnectionString);
 
                 await BootstrapAdministratorAsync(
-                    serviceProvider);
+                    serviceProvider,
+                    configuration.AdminUsername,
+                    configuration.AdminPassword);
 
                 await RunWelcomeMenuAsync(serviceProvider);
             }
@@ -77,7 +78,9 @@ namespace BankingApp
         }
 
         private static async Task BootstrapAdministratorAsync(
-            ServiceProvider serviceProvider)
+            ServiceProvider serviceProvider,
+            string adminUsername,
+            string adminPassword)
         {
             using IServiceScope scope =
                 serviceProvider.CreateScope();
@@ -87,10 +90,8 @@ namespace BankingApp
                     .GetRequiredService<AdminBootstrapService>();
 
             await bootstrapService.BootstrapAsync(
-                Environment.GetEnvironmentVariable(
-                    "BANKING_ADMIN_USERNAME"),
-                Environment.GetEnvironmentVariable(
-                    "BANKING_ADMIN_PASSWORD"));
+                adminUsername,
+                adminPassword);
         }
 
         private static async Task RunWelcomeMenuAsync(
@@ -408,6 +409,7 @@ namespace BankingApp
                         case "6":
                             await RequestCheckbookAsync(
                                 serviceProvider,
+                                username,
                                 customerId);
                             break;
 
@@ -504,8 +506,16 @@ namespace BankingApp
             ServiceProvider serviceProvider,
             int customerId)
         {
-            string accountNumber =
-                ReadRequired("Account Number: ");
+            Account account =
+                await SelectCustomerAccountAsync(
+                    serviceProvider,
+                    customerId,
+                    requireActiveAccount: true);
+
+            ShowOperationAccount(
+                "WITHDRAW",
+                account);
+
             decimal amount =
                 ReadDecimal("Withdrawal Amount: ");
 
@@ -516,20 +526,34 @@ namespace BankingApp
                 scope.ServiceProvider
                     .GetRequiredService<AccountService>();
 
-            await accountService.WithdrawAsync(
-                customerId,
-                accountNumber,
-                amount);
+            Account updatedAccount =
+                await accountService.WithdrawAsync(
+                    customerId,
+                    account.AccountNumber,
+                    amount);
 
-            ShowMessage("Withdrawal successful.");
+            ShowBalanceChangeReceipt(
+                "WITHDRAWAL SUCCESSFUL",
+                updatedAccount,
+                "Amount Withdrawn",
+                amount,
+                "Remaining Balance");
         }
 
         private static async Task DepositAsync(
             ServiceProvider serviceProvider,
             int customerId)
         {
-            string accountNumber =
-                ReadRequired("Account Number: ");
+            Account account =
+                await SelectCustomerAccountAsync(
+                    serviceProvider,
+                    customerId,
+                    requireActiveAccount: true);
+
+            ShowOperationAccount(
+                "DEPOSIT",
+                account);
+
             decimal amount =
                 ReadDecimal("Deposit Amount: ");
 
@@ -540,22 +564,36 @@ namespace BankingApp
                 scope.ServiceProvider
                     .GetRequiredService<AccountService>();
 
-            await accountService.DepositAsync(
-                customerId,
-                accountNumber,
-                amount);
+            Account updatedAccount =
+                await accountService.DepositAsync(
+                    customerId,
+                    account.AccountNumber,
+                    amount);
 
-            ShowMessage("Deposit successful.");
+            ShowBalanceChangeReceipt(
+                "DEPOSIT SUCCESSFUL",
+                updatedAccount,
+                "Amount Deposited",
+                amount,
+                "Total Balance");
         }
 
         private static async Task TransferAsync(
             ServiceProvider serviceProvider,
             int customerId)
         {
-            string fromAccount =
-                ReadRequired("From Account Number: ");
+            Account fromAccount =
+                await SelectCustomerAccountAsync(
+                    serviceProvider,
+                    customerId,
+                    requireActiveAccount: true);
+
+            ShowOperationAccount(
+                "TRANSFER",
+                fromAccount);
+
             string toAccount =
-                ReadRequired("To Account Number: ");
+                ReadRequired("Recipient Account Number: ");
             decimal amount =
                 ReadDecimal("Transfer Amount: ");
 
@@ -568,7 +606,7 @@ namespace BankingApp
 
             await transferService.TransferAsync(
                 customerId,
-                fromAccount,
+                fromAccount.AccountNumber,
                 toAccount,
                 amount);
 
@@ -579,8 +617,11 @@ namespace BankingApp
             ServiceProvider serviceProvider,
             int customerId)
         {
-            string accountNumber =
-                ReadRequired("Account Number: ");
+            Account account =
+                await SelectCustomerAccountAsync(
+                    serviceProvider,
+                    customerId,
+                    requireActiveAccount: false);
 
             using IServiceScope scope =
                 serviceProvider.CreateScope();
@@ -593,7 +634,7 @@ namespace BankingApp
                 await transactionService
                     .GetLastFiveTransactionsAsync(
                         customerId,
-                        accountNumber);
+                        account.AccountNumber);
 
             Console.Clear();
             Console.WriteLine("===== LAST 5 TRANSACTIONS =====");
@@ -630,10 +671,19 @@ namespace BankingApp
 
         private static async Task RequestCheckbookAsync(
             ServiceProvider serviceProvider,
+            string username,
             int customerId)
         {
-            string accountNumber =
-                ReadRequired("Account Number: ");
+            Account account =
+                await SelectCustomerAccountAsync(
+                    serviceProvider,
+                    customerId,
+                    requireActiveAccount: true);
+
+            await ConfirmCustomerPasswordAsync(
+                serviceProvider,
+                username,
+                "Cheque-book request password");
 
             using IServiceScope scope =
                 serviceProvider.CreateScope();
@@ -644,9 +694,158 @@ namespace BankingApp
 
             await checkbookService.RequestCheckbookAsync(
                 customerId,
-                accountNumber);
+                account.AccountNumber);
 
             ShowMessage("Cheque book request submitted.");
+        }
+
+        private static async Task<Account>
+            SelectCustomerAccountAsync(
+                ServiceProvider serviceProvider,
+                int customerId,
+                bool requireActiveAccount)
+        {
+            using IServiceScope scope =
+                serviceProvider.CreateScope();
+
+            AccountService accountService =
+                scope.ServiceProvider
+                    .GetRequiredService<AccountService>();
+
+            IReadOnlyList<Account> customerAccounts =
+                await accountService
+                    .GetAccountsAsync(customerId);
+
+            List<Account> availableAccounts = customerAccounts
+                .Where(account =>
+                    !requireActiveAccount ||
+                    account.Status == AccountStatus.Active)
+                .ToList();
+
+            if (availableAccounts.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    requireActiveAccount
+                        ? "No active accounts are available for this operation."
+                        : "No accounts were found for this customer.");
+            }
+
+            if (availableAccounts.Count == 1)
+            {
+                return availableAccounts[0];
+            }
+
+            Console.Clear();
+            Console.WriteLine("===== SELECT ACCOUNT =====");
+            Console.WriteLine();
+
+            for (int index = 0;
+                index < availableAccounts.Count;
+                index++)
+            {
+                Account account = availableAccounts[index];
+
+                Console.WriteLine(
+                    $"{index + 1}. {account.AccountType} " +
+                    $"{MaskAccountNumber(account.AccountNumber)} — " +
+                    $"{account.Balance:C} — {account.Status}");
+            }
+
+            Console.WriteLine();
+
+            while (true)
+            {
+                int selection = ReadInt("Select account: ");
+
+                if (selection >= 1 &&
+                    selection <= availableAccounts.Count)
+                {
+                    return availableAccounts[selection - 1];
+                }
+
+                Console.WriteLine("Invalid choice");
+            }
+        }
+
+        private static void ShowOperationAccount(
+            string operationName,
+            Account account)
+        {
+            decimal availableBalance =
+                account is CheckingAccount checkingAccount
+                    ? checkingAccount.AvailableFunds
+                    : account.Balance;
+
+            Console.Clear();
+            WriteSummaryHeader(operationName);
+            WriteSummaryRow(
+                "Account",
+                $"{account.AccountType} " +
+                MaskAccountNumber(account.AccountNumber));
+            WriteSummaryRow(
+                "Available Balance",
+                availableBalance.ToString("C"));
+            Console.WriteLine(new string('-', 48));
+            Console.WriteLine();
+        }
+
+        private static void ShowBalanceChangeReceipt(
+            string title,
+            Account account,
+            string amountLabel,
+            decimal amount,
+            string balanceLabel)
+        {
+            Console.Clear();
+            WriteSummaryHeader(title);
+            WriteSummaryRow(
+                "Account",
+                $"{account.AccountType} " +
+                MaskAccountNumber(account.AccountNumber));
+            WriteSummaryRow(
+                amountLabel,
+                amount.ToString("C"));
+            Console.WriteLine(new string('-', 48));
+            WriteSummaryRow(
+                balanceLabel,
+                account.Balance.ToString("C"));
+
+            if (account is CheckingAccount checkingAccount &&
+                checkingAccount.AvailableFunds != account.Balance)
+            {
+                WriteSummaryRow(
+                    "Available Funds",
+                    checkingAccount.AvailableFunds.ToString("C"));
+            }
+
+            Console.WriteLine(new string('=', 48));
+            WaitForEnter();
+        }
+
+        private static void WriteSummaryHeader(string title)
+        {
+            Console.WriteLine(new string('=', 48));
+            Console.WriteLine(title.PadLeft(
+                (48 + title.Length) / 2));
+            Console.WriteLine(new string('=', 48));
+        }
+
+        private static void WriteSummaryRow(
+            string label,
+            string value)
+        {
+            Console.WriteLine($"{label,-22}{value,26}");
+        }
+
+        private static string MaskAccountNumber(
+            string accountNumber)
+        {
+            if (accountNumber.Length <= 4)
+            {
+                return accountNumber;
+            }
+
+            return "****" + accountNumber[^4..];
         }
 
         private static async Task RequestAccountClosureAsync(
@@ -660,10 +859,6 @@ namespace BankingApp
             AccountClosureService accountClosureService =
                 scope.ServiceProvider
                     .GetRequiredService<AccountClosureService>();
-
-            AuthService authService =
-                scope.ServiceProvider
-                    .GetRequiredService<AuthService>();
 
             IReadOnlyList<AccountClosureOption> options =
                 await accountClosureService
@@ -725,19 +920,10 @@ namespace BankingApp
 
             Console.WriteLine();
 
-            string password =
-                ReadPassword("Re-enter your password: ");
-
-            User? authenticatedUser =
-                await authService.AuthenticateAsync(
-                    username,
-                    password);
-
-            if (authenticatedUser == null)
-            {
-                ShowMessage("Invalid Credential");
-                return;
-            }
+            await ConfirmCustomerPasswordAsync(
+                serviceProvider,
+                username,
+                "Closure request password");
 
             bool confirmed = ReadConfirmation(
                 "Confirm closure request for " +
@@ -806,7 +992,10 @@ namespace BankingApp
             string username)
         {
             string currentPassword =
-                ReadPassword("Current Password: ");
+                await ConfirmCustomerPasswordAsync(
+                    serviceProvider,
+                    username,
+                    "Current password");
             string newPassword =
                 ReadPassword("New Password: ");
             string confirmation =
@@ -831,6 +1020,45 @@ namespace BankingApp
                 newPassword);
 
             ShowMessage("Password changed successfully.");
+        }
+
+        private static async Task<string>
+            ConfirmCustomerPasswordAsync(
+                ServiceProvider serviceProvider,
+                string username,
+                string promptLabel)
+        {
+            const int maximumAttempts = 3;
+
+            using IServiceScope scope =
+                serviceProvider.CreateScope();
+
+            AuthService authService =
+                scope.ServiceProvider
+                    .GetRequiredService<AuthService>();
+
+            for (int attempt = 1;
+                attempt <= maximumAttempts;
+                attempt++)
+            {
+                string password = ReadPassword(
+                    $"{promptLabel} " +
+                    $"(attempt {attempt} of {maximumAttempts}): ");
+
+                User? authenticatedUser =
+                    await authService.AuthenticateAsync(
+                        username,
+                        password);
+
+                if (authenticatedUser != null)
+                {
+                    return password;
+                }
+            }
+
+            throw new InvalidOperationException(
+                "Password confirmation failed after 3 attempts. " +
+                "Request was not processed.");
         }
 
         private static async Task RunAdminLoginAsync(
